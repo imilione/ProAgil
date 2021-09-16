@@ -1,11 +1,34 @@
-<div *ngFor="let evento of eventos">
-  Tema: {{evento.tema}}
-  <br>
-  Data: {{evento.dataEvento}}
-  <br>
-  Local: {{evento.local}}
-  <br>
-  Qtd pessoas: {{evento.qtdPessoas}}
+<form class="row">
+  <div class="form-group mb-2 col-auto">
+    <input type="text" class="form-control mr-2">
+  </div>
+  <div class="form-group mb-2 col-auto">
+    <button class="btn btn-outline-success">Buscar</button>
+  </div>
+</form>
+<!-- btn.btn.btn-outline-success{buscar} -->
+<!-- form>.form-group.mb-2>input.form-control.mr-2 -->
 
-  <hr>
-</div>
+<table class="table table-striped">
+  <thead class="table-dark">
+    <tr>
+      <td>#</td>
+      <td>Tema</td>
+      <td>Local</td>
+      <td>Data</td>
+      <td>Qtd Pessoas</td>
+      <td>Lote</td>
+      <td>Opções</td>
+    </tr>
+  </thead>
+  <tbody>
+    <thead></thead>
+    <thead></thead>
+    <thead></thead>
+    <thead></thead>
+    <thead></thead>
+    <thead></thead>
+    <thead></thead>
+  </tbody>
+</table>
+<!-- table.table.table-striped>(thead.thead-dark>tr>tr*7) -->

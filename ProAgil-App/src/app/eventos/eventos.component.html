@@ -1,34 +1,53 @@
-<form class="row">
+<div class="row">
   <div class="form-group mb-2 col-auto">
-    <input type="text" class="form-control mr-2">
+    <input type="text" class="form-control mr-2" placeholder="Digite aqui"
+    [(ngModel)]= "filtroLista">
   </div>
   <div class="form-group mb-2 col-auto">
     <button class="btn btn-outline-success">Buscar</button>
   </div>
-</form>
+</div>
 <!-- btn.btn.btn-outline-success{buscar} -->
 <!-- form>.form-group.mb-2>input.form-control.mr-2 -->
 
+<h3>Filtro: {{filtroLista}}</h3>
 <table class="table table-striped">
   <thead class="table-dark">
     <tr>
+      <td>
+        <button 
+        class="btn btn-secondary btn-sm"
+        (click)="alternarImagem()">
+          Show image
+        </button>
+      </td>
       <td>#</td>
       <td>Tema</td>
       <td>Local</td>
       <td>Data</td>
       <td>Qtd Pessoas</td>
-      <td>Lote</td>
-      <td>Opções</td>
+      <td>Lote</td>      
     </tr>
   </thead>
-  <tbody>
-    <thead></thead>
-    <thead></thead>
-    <thead></thead>
-    <thead></thead>
-    <thead></thead>
-    <thead></thead>
-    <thead></thead>
+  <tbody *ngIf="eventos">
+    <tr *ngFor="let evento of eventos">
+      <td>
+        <img *ngIf=mostrarImagem
+        src="http://localhost:5000/img/{{evento.imagemURL}}"
+          [style.width.px]="imagemLargura"
+          [style.margin.px]="imagemMargem"
+        >
+      </td>
+      <td>{{evento.eventoId}}</td>
+      <td>{{evento.tema}}</td>
+      <td>{{evento.local}}</td>
+      <td>{{evento.dataEvento}}</td>
+      <td>{{evento.qtdPessoas}}</td>
+      <td>{{evento.lote | uppercase}}</td>
+    </tr>
   </tbody>
+  <tfoot *ngIf="!eventos">
+    <h4>Não há eventos cadastrados!</h4>
+  </tfoot>
 </table>
 <!-- table.table.table-striped>(thead.thead-dark>tr>tr*7) -->

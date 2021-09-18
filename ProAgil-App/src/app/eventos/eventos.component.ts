@@ -9,15 +9,15 @@ import { Component, OnInit } from '@angular/core';
 export class EventosComponent implements OnInit {
 
   _filtroLista: string = '';
-  get filtroLista(): string{
-    return this._filtroLista
+  get filtroLista(): string {
+    return this._filtroLista;
   }
   set filtroLista(value: string){
     this._filtroLista = value;
+    this.eventosFiltrados = /*this.filtroLista ?*/ this.filtrarEventos(this.filtroLista) /*: this.eventos*/;
   }
-
   eventosFiltrados: any = [];
-  eventos: any;
+  eventos: any = [];
   imagemMargem = 2;
   imagemLargura = 30;
   mostrarImagem = true;
@@ -26,6 +26,12 @@ export class EventosComponent implements OnInit {
     this.mostrarImagem = !this.mostrarImagem;
   }
 
+  filtrarEventos(filtrarPor: string) { 
+    filtrarPor = filtrarPor.toLocaleLowerCase() 
+    return this.eventos.filter((evento:any) => { 
+      return evento.tema.toLocaleLowerCase().includes(filtrarPor) 
+    }) 
+  }
 
   constructor(private http: HttpClient) { }
 
@@ -36,6 +42,7 @@ export class EventosComponent implements OnInit {
   getEventos() {
     this.http.get('http://localhost:5000/api/values').subscribe(response => {
       this.eventos = response;
+      this.eventosFiltrados = this.eventos;
     }, error => {
       console.log(error);
     });

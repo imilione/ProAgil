@@ -24,13 +24,13 @@ namespace ProAgil.WebAPI.Controllers
         var results = await _repo.GetAllEventoAsync(true);
         return Ok(results);
       }
-      catch (System.Exception)
+      catch (System.Exception ex)
       {
-        return this.StatusCode(StatusCodes.Status500InternalServerError, "Banco de dados falou!");
+        return this.StatusCode(StatusCodes.Status500InternalServerError, $"Banco Dados Falhou {ex.Message}");
       }
     }
 
-    [HttpGet("{EventoId")]
+    [HttpGet("{EventoId}")]
     public async Task<IActionResult> Get(int EventoId)
     {
       try
@@ -40,12 +40,12 @@ namespace ProAgil.WebAPI.Controllers
       }
       catch (System.Exception)
       {
-        return this.StatusCode(StatusCodes.Status500InternalServerError, "Banco de dados falou!");
+        return this.StatusCode(StatusCodes.Status500InternalServerError, "Banco de dados falhou!");
       }
     }
 
 
-    [HttpGet("getByTema/{EventoId")]
+    [HttpGet("getByTema/{tema}")]
     public async Task<IActionResult> Get(string tema)
     {
       try
@@ -55,7 +55,7 @@ namespace ProAgil.WebAPI.Controllers
       }
       catch (System.Exception)
       {
-        return this.StatusCode(StatusCodes.Status500InternalServerError, "Banco de dados falou!");
+        return this.StatusCode(StatusCodes.Status500InternalServerError, "Banco de dados falhou!");
       }
     }
 
@@ -71,7 +71,7 @@ namespace ProAgil.WebAPI.Controllers
       }
       catch (System.Exception)
       {
-        return this.StatusCode(StatusCodes.Status500InternalServerError, "Banco de dados falou!");
+        return this.StatusCode(StatusCodes.Status500InternalServerError, "Banco de dados falhou!");
       }
       return BadRequest();
     }
@@ -90,7 +90,7 @@ namespace ProAgil.WebAPI.Controllers
       }
       catch (System.Exception)
       {
-        return this.StatusCode(StatusCodes.Status500InternalServerError, "Banco de dados falou!");
+        return this.StatusCode(StatusCodes.Status500InternalServerError, "Banco de dados falhou!");
       }
       return BadRequest();
     }
@@ -109,7 +109,7 @@ namespace ProAgil.WebAPI.Controllers
       }
       catch (System.Exception)
       {
-        return this.StatusCode(StatusCodes.Status500InternalServerError, "Banco de dados falou!");
+        return this.StatusCode(StatusCodes.Status500InternalServerError, "Banco de dados falhou!");
       }
       return BadRequest();
     }

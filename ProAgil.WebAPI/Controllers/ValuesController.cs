@@ -30,7 +30,7 @@ namespace ProAgil.WebAPI.Controllers
       }
       catch (System.Exception)
       {
-        return this.StatusCode(StatusCodes.Status500InternalServerError, "Banco de dados falou!");
+        return this.StatusCode(StatusCodes.Status500InternalServerError, "Banco de dados falhou!");
       }
     }
 
@@ -45,7 +45,7 @@ namespace ProAgil.WebAPI.Controllers
       }
       catch (System.Exception)
       {
-        return this.StatusCode(StatusCodes.Status500InternalServerError, "Banco de dados falou!");
+        return this.StatusCode(StatusCodes.Status500InternalServerError, "Banco de dados falhou!");
       }
     }
 

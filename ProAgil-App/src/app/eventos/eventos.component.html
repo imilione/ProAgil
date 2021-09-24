@@ -1,7 +1,11 @@
 <div class="row">
   <div class="form-group mb-2 col-auto">
-    <input type="text" class="form-control mr-2" placeholder="Digite aqui"
-    [(ngModel)]= "filtroLista">
+    <input
+      type="text"
+      class="form-control mr-2"
+      placeholder="Digite aqui"
+      [(ngModel)]="filtroLista"
+    />
   </div>
   <!-- <div class="form-group mb-2 col-auto">
     <button class="btn btn-outline-success">Buscar</button>
@@ -10,14 +14,12 @@
 <!-- btn.btn.btn-outline-success{buscar} -->
 <!-- form>.form-group.mb-2>input.form-control.mr-2 -->
 
-<h3>Filtro: {{filtroLista}}</h3>
+<h3>Filtro: {{ filtroLista }}</h3>
 <table class="table table-striped">
   <thead class="table-dark">
     <tr>
       <td>
-        <button 
-        class="btn btn-secondary btn-sm"
-        (click)="alternarImagem()">
+        <button class="btn btn-secondary btn-sm" (click)="alternarImagem()">
           Show image
         </button>
       </td>
@@ -26,24 +28,45 @@
       <td>Local</td>
       <td>Data</td>
       <td>Qtd Pessoas</td>
-      <td>Lote</td>      
+      <td>Lote</td>
+      <td>Opções</td>
     </tr>
   </thead>
   <tbody *ngIf="eventos">
     <tr *ngFor="let evento of eventosFiltrados">
       <td>
-        <img *ngIf=mostrarImagem
-        src="http://localhost:5000/img/{{evento.imagemURL}}"
+        <img
+          *ngIf="mostrarImagem"
+          src="http://localhost:5000/img/{{ evento.imagemURL }}"
           [style.width.px]="imagemLargura"
           [style.margin.px]="imagemMargem"
-        >
+        />
       </td>
-      <td>{{evento.eventoId}}</td>
-      <td>{{evento.tema}}</td>
-      <td>{{evento.local}}</td>
-      <td>{{evento.dataEvento}}</td>
-      <td>{{evento.qtdPessoas}}</td>
-      <td>{{evento.lote | uppercase}}</td>
+      <td>{{ evento.id }}</td>
+      <td>{{ evento.tema }}</td>
+      <td>{{ evento.local }}</td>
+      <td>{{ evento.dataEvento | DateTimeFormatPipe }}</td>
+      <td>{{ evento.qtdPessoas }}</td>
+      <td>
+        <div *ngIf="!evento.lotes.length">NÃO INFORMADO</div>
+        <div *ngIf="evento.lotes.length">
+          {{ evento.lotes[0].nome | uppercase }}
+        </div>
+      </td>
+      <td>
+        <div class="btn-group">
+          <button
+            class="btn btn-sm btn-success"
+            tooltip="Editar"
+            (click)="openModal(template)"
+          >
+            <i class="fa fa-edit"></i>
+          </button>
+          <button class="btn btn-sm btn-danger" tooltip="Excluir">
+            <i class="fa fa-eraser"></i>
+          </button>
+        </div>
+      </td>
     </tr>
   </tbody>
   <tfoot *ngIf="!eventos">
@@ -51,3 +74,18 @@
   </tfoot>
 </table>
 <!-- table.table.table-striped>(thead.thead-dark>tr>tr*7) -->
+
+<ng-template #template>
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">Editar</h4>
+    <button
+      type="button"
+      class="close pull-right"
+      aria-label="Close"
+      (click)="modalRef.hide()"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">Edit your event here.</div>
+</ng-template>

@@ -15,8 +15,8 @@ defineLocale('pt-br', ptBrLocale);
   styleUrls: ['./eventos.component.css'],
 })
 export class EventosComponent implements OnInit {
-  titulo = "Eventos";
-  
+  titulo = 'Eventos';
+
   eventosFiltrados: Evento[] = [];
   eventos: Evento[] = [];
   evento!: Evento;
@@ -28,6 +28,8 @@ export class EventosComponent implements OnInit {
   registerForm!: FormGroup;
   idEdit!: number;
   bodyDeletarEvento = '';
+
+  file!: File;
 
   _filtroLista: string = '';
 
@@ -127,6 +129,13 @@ export class EventosComponent implements OnInit {
       ],
       email: ['', [Validators.required, Validators.email]],
     });
+  }
+
+  onFileChange(event: any) {
+    const reader = new FileReader();
+    if (event.target.files && event.target.files.length) {
+      this.file = event.target.files;
+    }
   }
 
   salvarAlteracao(template: any) {

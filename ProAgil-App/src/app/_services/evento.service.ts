@@ -19,17 +19,18 @@ export class EventoService {
   }
 
   getEventoById(id: number): Observable<Evento> {
-    return this.http.get<Evento>(`${this.baseURL}/getByTema${id}`);
+    return this.http.get<Evento>(`${this.baseURL}/${id}`);
   }
 
   putEvento(evento: Evento) {
     return this.http.put(`${this.baseURL}/${evento.id}`, evento);
   }
 
-  postUpload(file: File) {
-    const fileToUPload = <File>file;
+  postUpload(file: File[], name: string) {
+    //const fileToUpload = <File>file[0] ;
+    const fileToUpload = file[0] as File;
     const formData = new FormData();
-    formData.append('file', fileToUPload, fileToUPload.name);
+    formData.append('file', fileToUpload, name);
 
     return this.http.post(`${this.baseURL}/upload`, formData);
   }

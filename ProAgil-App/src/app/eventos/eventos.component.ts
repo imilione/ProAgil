@@ -29,7 +29,10 @@ export class EventosComponent implements OnInit {
   idEdit!: number;
   bodyDeletarEvento = '';
 
-  file!: File;
+  file!: File[];
+
+  dataAtual!: string;
+  fileNameToUpdate!: string;
 
   _filtroLista: string = '';
 
@@ -67,8 +70,10 @@ export class EventosComponent implements OnInit {
   editarEvento(evento: Evento, template: any) {
     this.modoSalvar = 'put';
     this.openModal(template);
-    this.evento = evento;
-    this.registerForm.patchValue(evento);
+    this.evento = Object.assign({}, evento);
+    this.fileNameToUpdate = evento.imagemURL.toString();
+    this.evento.imagemURL = '';
+    this.registerForm.patchValue(this.evento);
   }
 
   novoEvento(template: any) {
@@ -90,7 +95,7 @@ export class EventosComponent implements OnInit {
   excluirEvento(evento: Evento, template: any) {
     this.openModal(template);
     this.evento = evento;
-    this.bodyDeletarEvento = `Tem certeza que deseja excluir o evento "${evento.tema}", código "${evento.id}"`;
+    this.bodyDeletarEvento = `Tem certeza que deseja excluir o evento "${evento.tema}", código "${evento.id}"?`;
   }
 
   ngOnInit() {
@@ -133,44 +138,109 @@ export class EventosComponent implements OnInit {
 
   onFileChange(event: any) {
     const reader = new FileReader();
+
     if (event.target.files && event.target.files.length) {
       this.file = event.target.files;
+      console.log(this.file);
     }
   }
 
-  salvarAlteracao(template: any) {
+  uploadImagem() {
     if (this.modoSalvar === 'post') {
-      if (this.registerForm.valid) {
+      const nomeArquivo = this.evento.imagemURL.split('\\', 3);
+      this.evento.imagemURL = nomeArquivo[2];
+
+      this.eventoService.postUpload(this.file, nomeArquivo[2]).subscribe(() => {
+        this.dataAtual = new Date().getMilliseconds().toString();
+        this.getEventos();
+      });
+    } else {
+     if(this.file != null){
+      this.evento.imagemURL = this.fileNameToUpdate;
+      this.eventoService
+        .postUpload(this.file, this.fileNameToUpdate)
+        .subscribe(() => {
+          this.dataAtual = new Date().getMilliseconds().toString();
+          this.getEventos();
+        });
+      }
+    }
+  }
+  /*salvarAlteracao(template: any) {
+    if (this.registerForm.valid) {
+      if (this.modoSalvar === 'post') {
         this.evento = Object.assign({}, this.registerForm.value);
+
+        this.uploadImagem();
+
         this.eventoService.postEvento(this.evento).subscribe(
           (novoEvento) => {
-            console.log(novoEvento);
             template.hide();
-            this.toastr.success('Criado com sucesso!');
             this.getEventos();
+            this.toastr.success('Criado com sucesso!');
           },
-          (error: any) => {
+          (error) => {
+            this.toastr.error('Erro ao salvar!');
+          }
+        );
+      } else {
+        this.evento = Object.assign(
+          { id: this.evento.id },
+          this.registerForm.value
+        );
+
+        this.uploadImagem();
+
+        this.eventoService.putEvento(this.evento).subscribe(
+          () => {
+            template.hide();
+            this.getEventos();
+            this.toastr.success('Editado com sucesso!');
+          },
+          (error) => {
             this.toastr.error('Erro ao salvar!');
             console.log(error);
           }
         );
       }
-    } else {
-      this.evento = Object.assign(
-        { id: this.evento.id },
-        this.registerForm.value
-      );
-      this.eventoService.putEvento(this.evento).subscribe(
-        () => {
-          template.hide();
-          this.toastr.success('Editado com sucesso!');
-          this.getEventos();
-        },
-        (error: any) => {
-          this.toastr.error('Erro ao salvar!');
-          console.log(error);
-        }
-      );
+    }
+  }*/
+  salvarAlteracao(template: any) {
+    if (this.registerForm.valid) {
+      if (this.modoSalvar === 'post') {
+        this.evento = Object.assign({}, this.registerForm.value);
+
+        this.uploadImagem();
+
+        this.eventoService.postEvento(this.evento).subscribe(
+          (novoEvento: any) => {
+            template.hide();
+            this.getEventos();
+            this.toastr.success('Inserido com Sucesso!');
+          },
+          (error) => {
+            this.toastr.error(`Erro ao Inserir: ${error}`);
+          }
+        );
+      } else {
+        this.evento = Object.assign(
+          { id: this.evento.id },
+          this.registerForm.value
+        );
+
+        this.uploadImagem();
+
+        this.eventoService.putEvento(this.evento).subscribe(
+          () => {
+            template.hide();
+            this.getEventos();
+            this.toastr.success('Editado com Sucesso!');
+          },
+          (error) => {
+            this.toastr.error(`Erro ao Editar: ${error}`);
+          }
+        );
+      }
     }
   }
 
@@ -189,10 +259,13 @@ export class EventosComponent implements OnInit {
   }
 
   getEventos() {
+    this.dataAtual = new Date().getMilliseconds().toString();
+
     this.eventoService.getAllEvento().subscribe(
-      (response) => {
-        this.eventos = response;
+      (_eventos: Evento[]) => {
+        this.eventos = _eventos;
         this.eventosFiltrados = this.eventos;
+        console.log(this.eventos);
       },
       (error) => {
         this.toastr.error('Erro ao tentar carregar eventos!');
